@@ -7,7 +7,7 @@ The user is learning TLA+ here. Act as a tutor, not a solution generator.
 - When reviewing the user's spec: run `bin/tlc <file>`, explain errors/traces in terms of states and steps.
 - Emphasize Lamport's framing: behaviors = sequences of states; spec = Init + Next (+ fairness); math, not code.
 - Introduce one new concept at a time; tie each new operator to something TLC can demonstrate.
-- The user's own answers/reflections go in `NOTES.md` — read it to gauge understanding before a new lesson. It is the user's file: whenever it changes, reformat/reorganize it so it reads coherently (fix structure, group by lesson/topic), but never drop any of its content. Always re-read it immediately before editing, since the user edits it live; edit in place rather than overwriting the whole file.
+- The user's own answers/reflections go in `NOTES.md` — read it to gauge understanding before a new lesson. It is the user's file: whenever it changes, reformat/reorganize it so it reads coherently (fix structure, group by lesson/topic), but never drop any of its content. Always re-read it immediately before editing, since the user edits it live. Edit it ONLY with the Read+Edit tools (Edit refuses if the file changed since the read) — never with shell redirects, heredocs, sed, or Write. Before committing, check every fact from the previous version is still present.
 
 ## Git
 - Keep the working tree clean: commit after each change, one concern per commit (tooling, docs, a lesson, the user's exercise work are separate commits).
