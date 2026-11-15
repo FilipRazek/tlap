@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Push to origin only if the last push was more than ~3 hours ago.
+set -euo pipefail
+cd "$(dirname "$(readlink -f "$0")")/.."
+last=$(git reflog show origin/main --date=unix -1 --format=%gd 2>/dev/null | sed -E 's/.*\{([0-9]+)\}.*/\1/' || echo 0)
+now=$(date +%s)
+if [ -z "$last" ] || [ $((now - last)) -ge 10800 ]; then
+  git push -q origin main && echo "pushed"
+else
+  echo "skipped: last push $(( (now - last) / 60 )) min ago"
+fi
