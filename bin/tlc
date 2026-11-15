@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Usage: bin/tlc Spec.tla [extra TLC args]   (uses Spec.cfg next to it)
-# Runs the TLC model checker. Translates PlusCal first if the file contains an algorithm.
+# Runs the TLC model checker (1 worker, so error traces are always shortest). Translates PlusCal first if the file contains an algorithm.
 set -euo pipefail
 JAR="$(dirname "$(readlink -f "$0")")/../tools/tla2tools.jar"
 if [ ! -f "$JAR" ]; then
@@ -13,4 +13,4 @@ cd "$dir"
 if grep -q -- '--algorithm\|--fair algorithm' "$base.tla"; then
   java -cp "$JAR" pcal.trans -nocfg "$base.tla" >/dev/null
 fi
-exec java -XX:+UseParallelGC -cp "$JAR" tlc2.TLC -noGenerateSpecTE -workers auto -metadir /tmp/tlc-states "$base.tla" "$@"
+exec java -XX:+UseParallelGC -cp "$JAR" tlc2.TLC -noGenerateSpecTE -workers 1 -metadir /tmp/tlc-states "$base.tla" "$@"
