@@ -18,7 +18,7 @@ Optional editor support: VS Code extension `tlaplus.vscode-ide`.
 | 01 | State machines | variables, `Init`, `Next`, primes, `[][Next]_v`, invariants, TLC |
 | 02 | A puzzle as a spec | nondeterminism, `\/`, `UNCHANGED`, using an invariant to *find* a solution |
 | 03 | Functions & constants | `CONSTANT`, functions, records, `EXCEPT`, `\E`, `\A`, parameterized actions |
-| 04 | Concurrency in PlusCal | processes, labels = atomic steps, the Peterson algorithm, mutual exclusion |
+| 04 | Concurrency in PlusCal | processes, labels = atomic steps, interleavings, race conditions, `await`, locks |
 | 05 | Reading the translation | how PlusCal becomes `Init`/`Next`, `pc`, why TLA+ is "just math" |
 | 06 | Liveness & fairness | `<>`, `~>`, weak/strong fairness, stuttering, deadlock vs. starvation |
 | 07 | A distributed protocol | message sets, failures, e.g. two-phase commit |
