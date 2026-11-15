@@ -47,4 +47,6 @@ Next == \/ FillSmall
 Spec == Init /\ [][Next]_<<small, big>>   \* two variables -> a tuple
 
 TypeOK == small \in 0..4 /\ big \in 0..7
+
+NotSolved == big /= Goal
 =============================================================================
