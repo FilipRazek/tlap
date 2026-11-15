@@ -1,6 +1,6 @@
 ---
-name: run
-description: Run TLC on the user's current TLA+ exercise and explain the result. Use when the user says "run", "check it", "run the exercise", or asks how their current spec is doing.
+name: start
+description: Start (run TLC on) the user's current TLA+ exercise and explain the result. Use when the user says "start", "run", "check it", "run the exercise", or asks how their current spec is doing.
 ---
 
 # Run the current exercise
