@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Usage: bin/tlc Spec.tla [extra TLC args]   (uses Spec.cfg next to it)
+# Runs the TLC model checker. Translates PlusCal first if the file contains an algorithm.
+set -euo pipefail
+JAR="$(dirname "$(readlink -f "$0")")/../tools/tla2tools.jar"
+if [ ! -f "$JAR" ]; then
+  mkdir -p "$(dirname "$JAR")"
+  curl -sSLf -o "$JAR" https://nightly.tlapl.us/dist/tla2tools.jar
+fi
+spec="$1"; shift || true
+dir="$(dirname "$spec")"; base="$(basename "$spec" .tla)"
+cd "$dir"
+if grep -q -- '--algorithm\|--fair algorithm' "$base.tla"; then
+  java -cp "$JAR" pcal.trans -nocfg "$base.tla" >/dev/null
+fi
+exec java -XX:+UseParallelGC -cp "$JAR" tlc2.TLC -noGenerateSpecTE -workers auto -metadir /tmp/tlc-states "$base.tla" "$@"
