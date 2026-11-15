@@ -20,4 +20,6 @@ Spec == Init /\ [][Next]_hr       \* "Init, and every step is a Next step
 TypeOK == hr \in 1..12            \* an INVARIANT: true in every reachable state
 
 NotThirteen == hr /= 13           \* redundant: TypeOK => NotThirteen
+
+Implication == TypeOK => NotThirteen
 =============================================================================
