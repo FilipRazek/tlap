@@ -10,3 +10,8 @@
 - `NotThirteen` is redundant: `hr \in 1..12` implies `hr /= 13`, i.e. `TypeOK => NotThirteen`.
 - Corollary: `TypeOK \/ NotThirteen` simplifies to just `NotThirteen`, a much weaker
   invariant (it allows hr = 0, 50, ...).
+
+## Lesson 3: Functions & constants
+
+### Records
+- Records are functions whose domain is a set of strings.
