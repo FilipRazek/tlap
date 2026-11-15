@@ -17,34 +17,54 @@ EXTENDS Naturals
 CONSTANT N                          \* number of worker processes
 
 (* --algorithm Counter
-variables count = 0;                \* shared by all workers
+variables count = 0;   lock = FALSE;             \* shared by all workers
 
 process Worker \in 1..N
 variables tmp = 0;                  \* local: each worker has its own
 begin
-  Incr: count := count + 1;
+  Acquire: await ~lock; lock := TRUE;
+  Read: tmp := count;
+  Write: count := tmp + 1;
+  Release: lock := FALSE;
 end process;
 end algorithm; *)
 
 \* BEGIN TRANSLATION
-VARIABLES pc, count, tmp
+VARIABLES pc, count, lock, tmp
 
-vars == << pc, count, tmp >>
+vars == << pc, count, lock, tmp >>
 
 ProcSet == (1..N)
 
 Init == (* Global variables *)
         /\ count = 0
+        /\ lock = FALSE
         (* Process Worker *)
         /\ tmp = [self \in 1..N |-> 0]
-        /\ pc = [self \in ProcSet |-> "Incr"]
+        /\ pc = [self \in ProcSet |-> "Acquire"]
 
-Incr(self) == /\ pc[self] = "Incr"
-              /\ count' = count + 1
-              /\ pc' = [pc EXCEPT ![self] = "Done"]
-              /\ tmp' = tmp
+Acquire(self) == /\ pc[self] = "Acquire"
+                 /\ ~lock
+                 /\ lock' = TRUE
+                 /\ pc' = [pc EXCEPT ![self] = "Read"]
+                 /\ UNCHANGED << count, tmp >>
 
-Worker(self) == Incr(self)
+Read(self) == /\ pc[self] = "Read"
+              /\ tmp' = [tmp EXCEPT ![self] = count]
+              /\ pc' = [pc EXCEPT ![self] = "Write"]
+              /\ UNCHANGED << count, lock >>
+
+Write(self) == /\ pc[self] = "Write"
+               /\ count' = tmp[self] + 1
+               /\ pc' = [pc EXCEPT ![self] = "Release"]
+               /\ UNCHANGED << lock, tmp >>
+
+Release(self) == /\ pc[self] = "Release"
+                 /\ lock' = FALSE
+                 /\ pc' = [pc EXCEPT ![self] = "Done"]
+                 /\ UNCHANGED << count, tmp >>
+
+Worker(self) == Acquire(self) \/ Read(self) \/ Write(self) \/ Release(self)
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == /\ \A self \in ProcSet: pc[self] = "Done"
