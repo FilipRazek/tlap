@@ -19,7 +19,7 @@ Optional editor support: VS Code extension `tlaplus.vscode-ide`.
 | 02 | A puzzle as a spec | nondeterminism, `\/`, `UNCHANGED`, using an invariant to *find* a solution |
 | 03 | Functions & constants | `CONSTANT`, functions, records, `EXCEPT`, `\E`, `\A`, parameterized actions |
 | 04 | Concurrency in PlusCal | processes, labels = atomic steps, interleavings, race conditions, `await`, locks |
-| 05 | Reading the translation | how PlusCal becomes `Init`/`Next`, `pc`, why TLA+ is "just math" |
+| 05 | PlusCal is just TLA+ | hand-write the translation: `pc`, one action per label, `Terminating`, direct mutual-exclusion invariant |
 | 06 | Liveness & fairness | `<>`, `~>`, weak/strong fairness, stuttering, deadlock vs. starvation |
 | 07 | A distributed protocol | message sets, failures, e.g. two-phase commit |
 | 08 | Refinement | one spec implements another, refinement mappings |
