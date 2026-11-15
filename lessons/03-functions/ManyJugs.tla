@@ -44,4 +44,6 @@ Next == (\E j \in Jugs : Fill(j) \/ Empty(j)) \/ \E j, k \in Jugs: Pour(j, k)
 Spec == Init /\ [][Next]_contents
 
 TypeOK == \A j \in Jugs : contents[j] \in 0..Capacity[j]
+
+NotSolved == \A j \in Jugs: contents[j] /= Goal
 =============================================================================
