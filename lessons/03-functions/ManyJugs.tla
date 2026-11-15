@@ -16,8 +16,8 @@ EXTENDS Naturals
 
 CONSTANT Goal                       \* set in ManyJugs.cfg
 
-Capacity == [small |-> 4, big |-> 7]   \* a record: jug name -> size
-Jugs == DOMAIN Capacity                \* the set {"small", "big"}
+Capacity == [small |-> 4, big |-> 7, tiny |-> 2]   \* a record: jug name -> size
+Jugs == DOMAIN Capacity                
 
 VARIABLE contents                   \* a function: jug name -> litres in it
 
