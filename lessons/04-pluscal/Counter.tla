@@ -22,8 +22,7 @@ variables count = 0;                \* shared by all workers
 process Worker \in 1..N
 variables tmp = 0;                  \* local: each worker has its own
 begin
-  Read:  tmp := count;              \* step 1: read the shared counter
-  Write: count := tmp + 1;          \* step 2: write back the incremented value
+  Incr: count := count + 1;
 end process;
 end algorithm; *)
 
@@ -38,19 +37,14 @@ Init == (* Global variables *)
         /\ count = 0
         (* Process Worker *)
         /\ tmp = [self \in 1..N |-> 0]
-        /\ pc = [self \in ProcSet |-> "Read"]
+        /\ pc = [self \in ProcSet |-> "Incr"]
 
-Read(self) == /\ pc[self] = "Read"
-              /\ tmp' = [tmp EXCEPT ![self] = count]
-              /\ pc' = [pc EXCEPT ![self] = "Write"]
-              /\ count' = count
+Incr(self) == /\ pc[self] = "Incr"
+              /\ count' = count + 1
+              /\ pc' = [pc EXCEPT ![self] = "Done"]
+              /\ tmp' = tmp
 
-Write(self) == /\ pc[self] = "Write"
-               /\ count' = tmp[self] + 1
-               /\ pc' = [pc EXCEPT ![self] = "Done"]
-               /\ tmp' = tmp
-
-Worker(self) == Read(self) \/ Write(self)
+Worker(self) == Incr(self)
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == /\ \A self \in ProcSet: pc[self] = "Done"
