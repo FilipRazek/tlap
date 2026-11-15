@@ -11,3 +11,4 @@ The user is learning TLA+ here. Act as a tutor, not a solution generator.
 
 ## Git
 - Keep the working tree clean: commit after each change, one concern per commit (tooling, docs, a lesson, the user's exercise work are separate commits).
+- Handle all commits yourself, without asking — including the user's in-progress exercise work and experiments. Never discard their changes; commit them, then make follow-up commits.
