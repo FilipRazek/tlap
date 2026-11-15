@@ -26,6 +26,6 @@ description: Start (run TLC on) the user's current TLA+ exercise and explain the
      from `Next`.
    - Say which exercise in `EXERCISES.md` this completes, and what's next.
 
-4. **Commit** per `CLAUDE.md`: if the working tree has the user's changes, commit them
-   (one concern per commit, e.g. `Lesson 3 ex 1: add Empty(j)`), even if TLC failed.
+4. **Commit** per `CLAUDE.md`: only when this run completes an exercise or experiment, commit the user's changes
+   (one concern per commit, e.g. `Lesson 3 ex 1: add Empty(j)`). Leave failed or in-progress attempts uncommitted.
    If the run completes the lesson, set up the next lesson as `CLAUDE.md` describes.

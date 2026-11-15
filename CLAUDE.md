@@ -11,7 +11,7 @@ The user is learning TLA+ here. Act as a tutor, not a solution generator.
 
 ## Git
 - Keep the working tree clean: commit after each change, one concern per commit (tooling, docs, a lesson, the user's exercise work are separate commits).
-- Handle all commits yourself, without asking — including the user's in-progress exercise work and experiments. Never discard their changes; commit them, then make follow-up commits.
+- Handle all commits yourself, without asking. Commit the user's exercise work at milestones (an exercise done, an experiment finished), not every intermediate attempt or mistake along the way. Never discard their changes; commit them, then make follow-up commits.
 
 ## Sessions
 - When the user finishes a lesson, immediately set up the next one (spec skeleton, .cfg, EXERCISES.md), verify it with TLC (skeleton runs; a scratchpad reference solution works), and commit it.
