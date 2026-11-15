@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""Compact exercise runner: bin/start [Spec.tla]
+Prints the spec's uncommitted diff and a condensed TLC result (errors, one-line
+trace states, counts) so the output is cheap to read."""
+import glob, os, re, subprocess, sys
+root = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+os.chdir(root)
+if len(sys.argv) > 1:
+    spec = sys.argv[1]
+else:
+    lesson = sorted(glob.glob("lessons/*/"))[-1]
+    specs = [f for f in glob.glob(lesson + "*.tla") if "_TTrace_" not in f]
+    spec = max(specs, key=os.path.getmtime)
+print("FILE", spec)
+d = os.path.dirname(spec)
+diff = subprocess.run(["git", "diff", "-U0", "--no-color", "--", d],
+                      capture_output=True, text=True).stdout
+for l in diff.splitlines():
+    if l.startswith(("+++", "---", "diff ", "index ")):
+        if l.startswith("+++"): print("DIFF", l[6:])
+        continue
+    if l.startswith("@@"): continue
+    print(" ", l)
+out = subprocess.run(["bin/tlc", spec], capture_output=True, text=True)
+lines = (out.stdout + out.stderr).splitlines()
+res, state, i = [], None, 0
+while i < len(lines):
+    l = lines[i]
+    m = re.match(r"State (\d+): <(.+?)(?: line \d+.*)?>$", l)
+    if m:
+        vals = []
+        i += 1
+        while i < len(lines) and lines[i].strip() and not lines[i].startswith(("State ", "Error", "Back to")):
+            vals.append(lines[i].strip().lstrip("/\\ ").strip()); i += 1
+        res.append(f"  {m.group(1)} {m.group(2)}: " + " | ".join(vals))
+        continue
+    if l.startswith("Error: The behavior up to this point"): i += 1; continue
+    if (l.startswith(("Error", "***", "Encountered", "Unknown operator", "Multiply-defined", "Was expecting",
+                      "Attempted", "The exception", ": "))
+        or re.match(r"line \d+, col", l) or ("states generated" in l and not l.startswith("Finished")) or "depth of the complete" in l
+        or l.startswith("Successor state") or "is not defined" in l):
+        if l.startswith(("*** Errors", "Error: Parsing or semantic")): i += 1; continue
+        if l not in res: res.append(l.strip())
+    i += 1
+counts = ("states generated", "depth of the complete")
+if all(any(c in r for c in counts) for r in res) and res: res.insert(0, "PASS")
+elif not res: res.insert(0, "NO RESULT (see bin/tlc output)")
+print("\n".join(res))

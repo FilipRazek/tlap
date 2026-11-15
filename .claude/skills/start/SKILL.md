@@ -5,27 +5,17 @@ description: Start (run TLC on) the user's current TLA+ exercise and explain the
 
 # Run the current exercise
 
-1. **Find the current spec.** Unless the user named a file, pick the most recently
-   modified `.tla` file in the highest-numbered lesson directory:
-   ```bash
-   d=$(ls -d lessons/*/ | sort | tail -1); ls -t "$d"*.tla | grep -v _TTrace_ | head -1
-   ```
-   Say which file you're running in one short line.
+1. Run `bin/start` (or `bin/start <file>` if the user named one). It picks the
+   newest spec in the latest lesson and prints, compactly: the file, its uncommitted
+   diff, then `PASS` or the errors, a one-line-per-state trace, and state counts.
+   Don't run anything else to gather context unless that output is insufficient.
 
-2. **Run TLC** from the repo root: `bin/tlc <file>`.
-   Show only what matters (errors, trace, state counts); don't paste the banner.
+2. Explain briefly, following `CLAUDE.md`:
+   - Error → the exact line and what's wrong; hint, don't rewrite the user's spec.
+   - Violation → read the trace as states + actions; say if it's the intended result.
+   - Pass → sanity-check the distinct-state count against `EXERCISES.md`.
+   - Say which exercise this completes and what's next.
 
-3. **Explain the result** following the tutoring rules in `CLAUDE.md`:
-   - Parse/semantic error → point at the exact line and what's wrong; hint, don't rewrite
-     the user's spec for them unless asked.
-   - Invariant violation → read the trace as a behavior (states + action labels).
-     If the violation is the intended outcome of the exercise (e.g. a `NotSolved`
-     invariant), say so.
-   - Pass → sanity-check the distinct-state count against what the exercise expects
-     (`EXERCISES.md`); a suspiciously low count usually means an action is missing
-     from `Next`.
-   - Say which exercise in `EXERCISES.md` this completes, and what's next.
-
-4. **Commit** per `CLAUDE.md`: only when this run completes an exercise or experiment, commit the user's changes
-   (one concern per commit, e.g. `Lesson 3 ex 1: add Empty(j)`). Leave failed or in-progress attempts uncommitted.
-   If the run completes the lesson, set up the next lesson as `CLAUDE.md` describes.
+3. Only when an exercise or experiment is complete: remove its TODO comments, commit
+   (one concern per commit), run `bin/maybe-push`. If the lesson is complete, set up
+   the next one as `CLAUDE.md` describes.
