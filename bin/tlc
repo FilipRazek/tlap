@@ -11,7 +11,9 @@ spec="$1"; shift || true
 dir="$(dirname "$spec")"; base="$(basename "$spec" .tla)"
 cd "$dir"
 if grep -q -- '--algorithm\|--fair algorithm' "$base.tla"; then
-  java -cp "$JAR" pcal.trans -nocfg "$base.tla" >/dev/null
+  if ! out=$(java -cp "$JAR" pcal.trans -nocfg "$base.tla" 2>&1); then
+    echo "PlusCal translation failed:"; echo "$out" | grep -v "^pcal.trans Version"; exit 1
+  fi
   rm -f "$base.old"   # translator's backup copy; git is our backup
 fi
 exec java -XX:+UseParallelGC -cp "$JAR" tlc2.TLC -noGenerateSpecTE -workers 1 -metadir /tmp/tlc-states "$base.tla" "$@"

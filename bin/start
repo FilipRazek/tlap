@@ -24,6 +24,8 @@ for l in diff.splitlines():
 out = subprocess.run(["bin/tlc", spec], capture_output=True, text=True)
 lines = (out.stdout + out.stderr).splitlines()
 res, state, i = [], None, 0
+if any(l.startswith("PlusCal translation failed") for l in lines):
+    print("\n".join(l.strip() for l in lines if l.strip())); sys.exit()
 while i < len(lines):
     l = lines[i]
     m = re.match(r"State (\d+): <(.+?)(?: line \d+.*)?>$", l)
