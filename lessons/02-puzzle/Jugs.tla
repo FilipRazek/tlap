@@ -24,16 +24,25 @@ Init == small = 0 /\ big = 0
 FillSmall  == small' = 4 /\ UNCHANGED big
 EmptySmall == small' = 0 /\ UNCHANGED big
 
+FillBig == big' = 7 /\ UNCHANGED small
+EmptyBig == big' = 0 /\ UNCHANGED small
+
 SmallToBig ==                     \* pour until small is empty or big is full
     LET amount == Min(small, 7 - big)     \* LET gives a local name
     IN  /\ small' = small - amount
         /\ big'   = big + amount
 
-\* TODO (exercise 1): FillBig, EmptyBig, BigToSmall
+BigToSmall ==
+    LET amount == Min(big, 4 - small)
+    IN /\ small' = small + amount
+       /\ big'   = big - amount
 
 Next == \/ FillSmall
         \/ EmptySmall
         \/ SmallToBig
+        \/ FillBig
+        \/ EmptyBig
+        \/ BigToSmall
 
 Spec == Init /\ [][Next]_<<small, big>>   \* two variables -> a tuple
 
