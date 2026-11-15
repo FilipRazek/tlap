@@ -34,11 +34,8 @@ Pour(a, b) ==
     /\ LET amount == Min(contents[a], Capacity[b] - contents[b])
        IN  contents' = [contents EXCEPT ![a] = @ - amount, ![b] = @ + amount]
 
-\* TODO (exercise 1): Empty(j)
-
 Empty(j) == contents' = [contents EXCEPT ![j] = 0]
 
-\* TODO (exercise 2): a Next that allows Fill, Empty or Pour on any jug(s)
 Next == (\E j \in Jugs : Fill(j) \/ Empty(j)) \/ \E j, k \in Jugs: Pour(j, k)
 
 Spec == Init /\ [][Next]_contents
