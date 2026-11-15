@@ -39,7 +39,7 @@ Pour(a, b) ==
 Empty(j) == contents' = [contents EXCEPT ![j] = 0]
 
 \* TODO (exercise 2): a Next that allows Fill, Empty or Pour on any jug(s)
-Next == Fill("small")
+Next == (\E j \in Jugs : Fill(j) \/ Empty(j)) \/ \E j, k \in Jugs: Pour(j, k)
 
 Spec == Init /\ [][Next]_contents
 
