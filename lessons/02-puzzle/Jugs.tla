@@ -15,7 +15,7 @@ EXTENDS Naturals
 
 VARIABLES small, big              \* litres in the 4L jug and the 7L jug
 
-Goal == 8
+Goal == 5
 
 Min(a, b) == IF a < b THEN a ELSE b    \* you can define your own operators
 
