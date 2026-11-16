@@ -34,10 +34,25 @@ Acquire(self) == /\ pc[self] = "Acquire"
                  /\ pc' = [pc EXCEPT ![self] = "Read"]
                  /\ UNCHANGED <<count, tmp>>
 
-\* TODO (exercise 1): Read(self), Write(self), Release(self)
+Read(self) == /\ pc[self] = "Read"
+              /\ tmp' = [tmp EXCEPT ![self] = count]
+              /\ pc' = [pc EXCEPT ![self] = "Write"]
+              /\ UNCHANGED <<count, lock>>
 
-\* TODO (exercise 2): Terminating, and a Next that lets some process take a step
-Next == \E self \in Procs : Acquire(self)
+Write(self) == /\ pc[self] = "Write"
+               /\ pc' = [pc EXCEPT ![self] = "Release"]
+               /\ count' = tmp[self] + 1
+               /\ UNCHANGED <<tmp, lock>>
+
+Release(self) == /\ pc[self] = "Release"
+                 /\ pc' = [pc EXCEPT ![self] = "Done"]
+                 /\ lock' = FALSE
+                 /\ UNCHANGED <<tmp, count>>
+
+Terminating == AllDone /\ UNCHANGED vars
+
+Next == \/ \E self \in Procs : Acquire(self) \/ Read(self) \/ Write(self) \/ Release(self)
+        \/ Terminating
 
 Spec == Init /\ [][Next]_vars
 
